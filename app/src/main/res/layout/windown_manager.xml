@@ -6,28 +6,15 @@
     android:background="#000000"
     android:orientation="vertical">
 
-    <TextView
-        android:textStyle="bold"
-        android:textSize="40sp"
-        android:layout_marginTop="100dp"
-        android:gravity="center_horizontal"
-        android:id="@+id/tvTime"
-        android:textColor="#fff"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="25/2/2015" />
+    <!--<Switch-->
+        <!--android:id="@+id/sw_lock"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
-    <DigitalClock
-        android:id="@+id/digClock"
-        android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true"
-        android:textSize="40sp"
-        android:layout_below="@+id/tvTime"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:ignore="NewApi" />
-
-  /
+  <Button
+      android:id="@+id/btThoat"
+      android:text="Thoát"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
 
 </RelativeLayout>
