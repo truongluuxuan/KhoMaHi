@@ -1,6 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="#ffffff"
     android:layout_height="match_parent">
-
+<TextView
+    android:id="@+id/tvThoat"
+    android:textColor="#ffffff"
+    android:background="#555555"
+    android:layout_centerInParent="true"
+    android:padding="10dp"
+    android:text="Thoát"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
 
 </RelativeLayout>
