@@ -1,7 +1,11 @@
 package tlx.khomahi.com.khomahi;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -17,8 +21,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent serviceIntent = new Intent(this, MyService.class);
-        startService(serviceIntent);
+        if(Build.VERSION.SDK_INT >= 23) {
+            if (!Settings.canDrawOverlays(MainActivity.this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 1234);
+            }else {
+                Intent intent = new Intent(MainActivity.this, MyService.class);
+                startService(intent);
+            }
+        }
+        else
+        {
+            Intent intent = new Intent(MainActivity.this, MyService.class);
+            startService(intent);
+        }
+
        TextView tvThoat=(TextView)findViewById(R.id.tvThoat) ;
         tvThoat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,5 +46,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==1234){
+            Intent intent = new Intent(MainActivity.this, MyService.class);
+            startService(intent);
+        }
     }
 }

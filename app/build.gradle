@@ -20,8 +20,8 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
-    compile project(':openCVLibrary2410')
     compile files('libs/javacpp.jar')
     compile files('libs/javacv.jar')
     compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile project(':openCVLibrary2410')
 }
