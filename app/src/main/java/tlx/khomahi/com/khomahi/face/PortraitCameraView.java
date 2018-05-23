@@ -1,7 +1,4 @@
-package org.opencv.android;
-
-import java.lang.reflect.Method;
-import java.util.List;
+package tlx.khomahi.com.khomahi.face;
 
 import android.content.Context;
 import android.graphics.ImageFormat;
@@ -18,6 +15,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.List;
+
 /**
  * This class is an implementation of the Bridge View between OpenCV and Java Camera.
  * This class relays on the functionality available in base class and only implements
@@ -27,7 +26,7 @@ import org.opencv.imgproc.Imgproc;
  * When frame is delivered via callback from Camera - it processed via OpenCV to be
  * converted to RGBA32 and then passed to the external callback for modifications if required.
  */
-public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallback {
+public class PortraitCameraView extends PortraitCameraBridgeViewBase implements PreviewCallback {
 
     private static final int MAGIC_TEXTURE_ID = 10;
     private static final String TAG = "JavaCameraView";
@@ -44,22 +43,24 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 
     public static class JavaCameraSizeAccessor implements ListItemAccessor {
 
+        @Override
         public int getWidth(Object obj) {
             Camera.Size size = (Camera.Size) obj;
             return size.width;
         }
 
+        @Override
         public int getHeight(Object obj) {
             Camera.Size size = (Camera.Size) obj;
             return size.height;
         }
     }
 
-    public JavaCameraView(Context context, int cameraId) {
+    public PortraitCameraView(Context context, int cameraId) {
         super(context, cameraId);
     }
 
-    public JavaCameraView(Context context, AttributeSet attrs) {
+    public PortraitCameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -137,7 +138,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
             try {
                 Camera.Parameters params = mCamera.getParameters();
                 Log.d(TAG, "getSupportedPreviewSizes()");
-                List<android.hardware.Camera.Size> sizes = params.getSupportedPreviewSizes();
+                List<Camera.Size> sizes = params.getSupportedPreviewSizes();
 
                 if (sizes != null) {
                     /* Select the size that fits surface considering maximum size allowed */
@@ -147,7 +148,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     Log.d(TAG, "Set preview size to " + Integer.valueOf((int)frameSize.width) + "x" + Integer.valueOf((int)frameSize.height));
                     params.setPreviewSize((int)frameSize.width, (int)frameSize.height);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && !android.os.Build.MODEL.equals("GT-I9100"))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && !Build.MODEL.equals("GT-I9100"))
                         params.setRecordingHint(true);
 
                     List<String> FocusModes = params.getSupportedFocusModes();
@@ -163,12 +164,12 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
                     mFrameHeight = params.getPreviewSize().height;
 
                     if ((getLayoutParams().width == LayoutParams.MATCH_PARENT) && (getLayoutParams().height == LayoutParams.MATCH_PARENT))
-                        mScale = Math.max(((float)height)/mFrameHeight, ((float)width)/mFrameWidth);
+                        mScale = Math.min(((float)height)/mFrameWidth, ((float)width)/mFrameHeight); // 세로모드 화면을 위해 가로세로 바꿈
                     else
                         mScale = 0;
 
                     if (mFpsMeter != null) {
-                        mFpsMeter.setResolution(mFrameWidth, mFrameHeight);
+                        mFpsMeter.setResolution(mFrameHeight, mFrameWidth); // 세로모드 화면을 위해 가로세로 바꿈
                     }
 
                     int size = mFrameWidth * mFrameHeight;
@@ -209,19 +210,6 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         return result;
     }
 
-    public void setDisplayOrientation(int angle){
-        Method downPolymorphic;
-        try
-        {
-            downPolymorphic = mCamera.getClass().getMethod("setDisplayOrientation", new Class[] { int.class });
-            if (downPolymorphic != null)
-                downPolymorphic.invoke(mCamera, new Object[] { angle });
-        }
-        catch (Exception e1)
-        {
-        }
-    }
-
     protected void releaseCamera() {
         synchronized (this) {
             if (mCamera != null) {
@@ -242,6 +230,8 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         }
     }
 
+    private boolean mCameraFrameReady = false;
+
     @Override
     protected boolean connectCamera(int width, int height) {
 
@@ -253,6 +243,8 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         if (!initializeCamera(width, height))
             return false;
 
+        mCameraFrameReady = false;
+
         /* now we can start update thread */
         Log.d(TAG, "Starting processing thread");
         mStopThread = false;
@@ -262,6 +254,7 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
         return true;
     }
 
+    @Override
     protected void disconnectCamera() {
         /* 1. We need to stop thread which updating the frames
          * 2. Stop camera and release it
@@ -284,12 +277,16 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 
         /* Now release camera */
         releaseCamera();
+
+        mCameraFrameReady = false;
     }
 
+    @Override
     public void onPreviewFrame(byte[] frame, Camera arg1) {
         Log.d(TAG, "Preview Frame received. Frame size: " + frame.length);
         synchronized (this) {
-            mFrameChain[1 - mChainIdx].put(0, 0, frame);
+            mFrameChain[mChainIdx].put(0, 0, frame);
+            mCameraFrameReady = true;
             this.notify();
         }
         if (mCamera != null)
@@ -297,10 +294,12 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
     }
 
     private class JavaCameraFrame implements CvCameraViewFrame {
+        @Override
         public Mat gray() {
             return mYuvFrameData.submat(0, mHeight, 0, mWidth);
         }
 
+        @Override
         public Mat rgba() {
             Imgproc.cvtColor(mYuvFrameData, mRgba, Imgproc.COLOR_YUV2RGBA_NV21, 4);
             return mRgba;
@@ -326,21 +325,25 @@ public class JavaCameraView extends CameraBridgeViewBase implements PreviewCallb
 
     private class CameraWorker implements Runnable {
 
+        @Override
         public void run() {
             do {
-                synchronized (JavaCameraView.this) {
+                synchronized (PortraitCameraView.this) {
                     try {
-                        JavaCameraView.this.wait();
+                        while (!mCameraFrameReady && !mStopThread) {
+                            PortraitCameraView.this.wait();
+                        }
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
+                    if (mCameraFrameReady)
+                        mChainIdx = 1 - mChainIdx;
                 }
 
-                if (!mStopThread) {
-                    if (!mFrameChain[mChainIdx].empty())
-                        deliverAndDrawFrame(mCameraFrame[mChainIdx]);
-                    mChainIdx = 1 - mChainIdx;
+                if (!mStopThread && mCameraFrameReady) {
+                    mCameraFrameReady = false;
+                    if (!mFrameChain[1 - mChainIdx].empty())
+                        deliverAndDrawFrame(mCameraFrame[1 - mChainIdx]);
                 }
             } while (!mStopThread);
             Log.d(TAG, "Finish processing thread");

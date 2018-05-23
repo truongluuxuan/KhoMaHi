@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 22
     buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "tlx.khomahi.com.khomahi"
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion 17
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -19,9 +19,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
     compile files('libs/javacpp.jar')
     compile files('libs/javacv.jar')
-    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
     compile project(':openCVLibrary2410')
 }

@@ -135,6 +135,7 @@ public class Training extends AppCompatActivity implements CameraBridgeViewBase.
                     }
 
                     mOpenCvCameraView.enableView();
+                    mOpenCvCameraView.setCamFront();
 
                 } break;
                 default:

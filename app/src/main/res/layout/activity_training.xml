@@ -5,23 +5,16 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="org.opencv.cultoftheunicorn.marvel.cultoftheunicorn.marvel.Training">
+       >
 
-            <cultoftheunicorn.marvel.Tutorial3View
+            <tlx.khomahi.com.khomahi.face.Tutorial3View
                 android:id="@+id/tutorial3_activity_java_surface_view"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="65dp"
-                android:layout_marginStart="65dp"
-                android:layout_marginTop="35dp" />
+                />
 
             <ImageView
                 android:id="@+id/imagePreview"
@@ -36,15 +29,11 @@
                 android:contentDescription="image_preview" />
 
             <ToggleButton
+                android:layout_below="@+id/tutorial3_activity_java_surface_view"
                 android:id="@+id/capture"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tutorial3_activity_java_surface_view"
-                android:layout_alignRight="@+id/imagePreview"
-                android:layout_alignEnd="@+id/imagePreview"
-                android:layout_marginRight="23dp"
-                android:layout_marginEnd="23dp"
-                android:layout_marginBottom="10dp"
+              android:layout_centerHorizontal="true"
                 android:checked="false"
                 android:textOff="capture"
                 android:textOn="capturing"

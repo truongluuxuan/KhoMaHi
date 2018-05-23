@@ -56,12 +56,12 @@ public class ReviewResults extends AppCompatActivity implements ReviewListAdapte
             }
         });
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Review and Mark");
-        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+//        setSupportActionBar(toolbar);
+//
+//        if(getSupportActionBar() != null) {
+//            getSupportActionBar().setTitle("Review and Mark");
+//        }
 
         List<String> reviewList = Arrays.asList(getIntent().getStringArrayExtra("list"));
 

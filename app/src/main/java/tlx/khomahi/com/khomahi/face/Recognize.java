@@ -165,6 +165,8 @@ public class Recognize extends AppCompatActivity implements CameraBridgeViewBase
 
         mOpenCvCameraView = (Tutorial3View) findViewById(R.id.tutorial3_activity_java_surface_view);
         mOpenCvCameraView.setCvCameraViewListener(this);
+        mOpenCvCameraView.setCamFront();
+        mOpenCvCameraView.setDisplayOrientation(90);
 
         //mPath=getFilesDir()+"/facerecogOCV/";
         mPath = Environment.getExternalStorageDirectory()+"/facerecogOCV/";

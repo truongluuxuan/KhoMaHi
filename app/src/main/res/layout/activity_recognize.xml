@@ -5,34 +5,22 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="org.opencv.cultoftheunicorn.marvel.cultoftheunicorn.marvel.Training">
+      >
 
-        <cultoftheunicorn.marvel.Tutorial3View
+        <tlx.khomahi.com.khomahi.face.Tutorial3View
             android:id="@+id/tutorial3_activity_java_surface_view"
             android:layout_width="325dp"
             android:layout_height="250dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="35dp" />
+            />
 
         <TextView
             android:id="@+id/results"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginStart="40dp"
-            android:layout_above="@+id/scan"
-            android:layout_toRightOf="@+id/tutorial3_activity_java_surface_view"
-            android:layout_toEndOf="@+id/tutorial3_activity_java_surface_view"
-            android:layout_marginBottom="15dp"
+            android:layout_below="@+id/scan"
             android:textAlignment="center"
             android:gravity="center"
             android:textStyle="bold"/>
@@ -45,11 +33,7 @@
             android:textAllCaps="false"
             android:textOff="scan"
             android:textOn="scanning"
-            android:layout_alignBottom="@+id/tutorial3_activity_java_surface_view"
-            android:layout_toRightOf="@+id/tutorial3_activity_java_surface_view"
-            android:layout_toEndOf="@+id/tutorial3_activity_java_surface_view"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp" />
+            android:layout_below="@+id/tutorial3_activity_java_surface_view" />
 
         <TextView
             android:id="@+id/textView3"

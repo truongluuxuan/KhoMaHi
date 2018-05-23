@@ -21,21 +21,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(Build.VERSION.SDK_INT >= 23) {
-            if (!Settings.canDrawOverlays(MainActivity.this)) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 1234);
-            }else {
-                Intent intent = new Intent(MainActivity.this, MyService.class);
-                startService(intent);
-            }
-        }
-        else
-        {
+
             Intent intent = new Intent(MainActivity.this, MyService.class);
             startService(intent);
-        }
+
 
        TextView tvThoat=(TextView)findViewById(R.id.tvThoat) ;
         tvThoat.setOnClickListener(new View.OnClickListener() {
